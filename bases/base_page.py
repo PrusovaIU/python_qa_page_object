@@ -7,9 +7,10 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 class BasePage:
-    def __init__(self, browser: WebDriver, url: str):
+    def __init__(self, browser: WebDriver, url: str, get: bool = True):
         self._url = url
-        browser.get(normpath(self._url))
+        if get is True:
+            browser.get(normpath(self._url))
         self._browser = browser
 
     def find_element(self, locator: LOCATOR_TYPE) -> WebElement:
@@ -19,6 +20,15 @@ class BasePage:
         :return: found element or raise NoSuchElementException
         """
         return self._browser.find_element(*locator)
+
+    def wait_browser_get_url(self, timeout: float):
+        """
+        Wait url is required url (self._url)
+        :param timeout: timeout of waiting
+        :return: None or raise TimeoutException
+        """
+        wait = WebDriverWait(self._browser, timeout)
+        wait.until(EC.url_to_be(self._url))
 
     def wait_visibility_of_element(self, locator: LOCATOR_TYPE, timeout: float) -> None:
         """

@@ -1,3 +1,4 @@
+from .featured_row import FeaturedRow
 from bases.base_page_with_header import BasePageWithHeader
 from selenium.webdriver.common.by import By
 
@@ -10,4 +11,6 @@ class MainPageElements:
 
 
 class MainPage(BasePageWithHeader):
-    pass
+    @property
+    def goods_row(self) -> FeaturedRow:
+        return FeaturedRow(self._browser)

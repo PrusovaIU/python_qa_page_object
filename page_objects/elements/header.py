@@ -1,4 +1,3 @@
-from bases.base_clickable import BaseClickable
 from bases.base_element import BaseElement
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -11,7 +10,7 @@ class Header(BaseElement):
 
     @property
     def cart_button(self):
-        return BaseClickable(self._browser, (By.CSS_SELECTOR, "#cart > button"), self._self)
+        return BaseElement(self._browser, (By.CSS_SELECTOR, "#cart > button"), self._self)
 
     @property
     def cart_ul(self):

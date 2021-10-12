@@ -1,10 +1,11 @@
 from .CONSTS import LOCATOR_TYPE
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from typing import Optional
+from typing import Optional, List
 
 
 class _ElementHasLocator:
@@ -31,13 +32,22 @@ class BaseElement:
     def web_element(self) -> WebElement:
         return self._self
 
+    def click(self) -> None:
+        self._self.click()
+
     def find_element(self, locator: LOCATOR_TYPE) -> WebElement:
         """
         Find element in this element
         :param locator: (By, locators name)
-        :return: found element or raise NoSuchElementException
+        :return: found element or raise NoSuchElementException/InvalidSelectorException
         """
         return self._self.find_element(*locator)
+
+    def get_children(self) -> List[WebElement]:
+        """
+        :return: found element or raise NoSuchElementException
+        """
+        return self._self.find_elements(By.CSS_SELECTOR, '*')
 
     def wait_is_visible(self, timeout: float):
         """

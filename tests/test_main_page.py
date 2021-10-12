@@ -26,5 +26,5 @@ def test_button(browser):
     cart_ul = main_page.header.cart_ul
     cart_ul.wait_is_visible(3)
     required_text = "Your shopping cart is empty!"
-    assert cart_ul.web_element.text == required_text, f"Unexpected text: {el.text}. \"{required_text}\" is expected"
-
+    assert cart_ul.web_element.text == required_text, f"Unexpected text: {cart_ul.web_element.text}. " \
+                                                      f"\"{required_text}\" is expected"
