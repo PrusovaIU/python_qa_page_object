@@ -10,6 +10,4 @@ class MainPageElements:
 
 
 class MainPage(BasePageWithHeader):
-    @property
-    def url(self) -> str:
-        return ''
+    pass

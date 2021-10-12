@@ -2,12 +2,11 @@ from page_objects.main_page import MainPage, MainPageElements
 from time import sleep
 from typing import Tuple
 import pytest
-from selenium.webdriver.common.by import By
 
 
 def test_content(browser):
     sleep(1)
-    MainPage(browser).find_element(MainPageElements.CONTENT)
+    MainPage(browser, browser.current_url).find_element(MainPageElements.CONTENT)
 
 
 @pytest.mark.parametrize("locator",
@@ -17,11 +16,11 @@ def test_content(browser):
                              pytest.param(MainPageElements.CAROUSEL_SWIPER, id="Test_carousel")
                          ])
 def test_find_elements(browser, locator: Tuple[str, str]):
-    MainPage(browser).wait_visibility_of_element(locator, 3)
+    MainPage(browser, browser.current_url).wait_visibility_of_element(locator, 3)
 
 
 def test_button(browser):
-    main_page = MainPage(browser)
+    main_page = MainPage(browser, browser.current_url)
     cart_button = main_page.header.cart_button
     cart_button.click()
     cart_ul = main_page.header.cart_ul

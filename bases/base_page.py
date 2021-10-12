@@ -1,5 +1,4 @@
 from .CONSTS import LOCATOR_TYPE
-from abc import abstractmethod, ABCMeta
 from os.path import normpath
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
@@ -7,14 +6,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 
-class BasePage(metaclass=ABCMeta):
-    @property
-    @abstractmethod
-    def url(self) -> str:
-        pass
-
-    def __init__(self, browser: WebDriver):
-        browser.get(normpath(f"{browser.current_url}/{self.url}"))
+class BasePage:
+    def __init__(self, browser: WebDriver, url: str):
+        self._url = url
+        browser.get(normpath(self._url))
         self._browser = browser
 
     def find_element(self, locator: LOCATOR_TYPE) -> WebElement:
