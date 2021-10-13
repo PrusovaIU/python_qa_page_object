@@ -1,5 +1,5 @@
-from .base_page import BasePage
-from page_objects.elements.header import Header
+from page_objects.bases.base_page import BasePage
+from page_objects.user_pages.elements.header import Header
 
 
 class BasePageWithHeader(BasePage):

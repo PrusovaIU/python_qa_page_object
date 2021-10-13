@@ -1,5 +1,5 @@
 from .featured_row import FeaturedRow
-from bases.base_page_with_header import BasePageWithHeader
+from page_objects.user_pages.bases.base_page_with_header import BasePageWithHeader
 from selenium.webdriver.common.by import By
 
 

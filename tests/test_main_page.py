@@ -1,4 +1,4 @@
-from page_objects.main_page import MainPage, MainPageElements
+from page_objects.user_pages.main_page import MainPage, MainPageElements
 from time import sleep
 from typing import Tuple
 import pytest

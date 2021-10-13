@@ -1,9 +1,9 @@
-from bases.base_element import BaseElement
-from bases.base_page import BasePage
+from page_objects.bases.base_element import BaseElement
+from page_objects.user_pages.bases.base_page_with_header import BasePageWithHeader
 from selenium.webdriver.common.by import By
 
 
-class GoodCardPage(BasePage):
+class GoodCardPage(BasePageWithHeader):
     BUTTON_CART_LOCATOR = (By.ID, "button-cart")
 
     @property

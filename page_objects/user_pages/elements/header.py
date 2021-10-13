@@ -1,7 +1,6 @@
-from bases.base_element import BaseElement
+from page_objects.bases.base_element import BaseElement
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.remote.webelement import WebElement
 
 
 class Header(BaseElement):

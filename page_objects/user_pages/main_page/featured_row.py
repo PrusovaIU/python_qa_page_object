@@ -1,5 +1,5 @@
-from bases.base_element import BaseElement
-from bases.CONSTS import LOCATOR_TYPE
+from page_objects.bases.base_element import BaseElement
+from page_objects.bases.CONSTS import LOCATOR_TYPE
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
