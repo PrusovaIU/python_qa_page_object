@@ -22,14 +22,18 @@ class MenuBlock(BaseElement):
     def list(self) -> BaseElement:
         return self.__list
 
-    def click_item(self, i: int):
+    def click_item(self, i: int) -> str:
         """
         Click to item of the menu
         :param i: item's position in menu
-        :return: None
+        :return: new url
         """
-        items: List[WebElement] = self.list.get_children()
-        items[i].click()
+        items: List[WebElement] = self._self.find_elements_by_tag_name("li")
+        required_item = items[i]
+        a = required_item.find_element(By.TAG_NAME, 'a')
+        new_url = a.get_attribute("href")
+        required_item.click()
+        return new_url
 
 
 class LeftMenu(BaseElement):

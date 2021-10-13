@@ -1,4 +1,4 @@
-from page_objects.user_pages.elements.alert_success import AlertSuccess
+from page_objects.elements.alert_success import AlertSuccess
 from page_objects.user_pages.good_card import GoodCardPage
 from page_objects.user_pages.main_page import MainPage
 from selenium.webdriver.common.by import By
