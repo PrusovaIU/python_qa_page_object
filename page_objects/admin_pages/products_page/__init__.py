@@ -1,4 +1,5 @@
 from .add_product_form import AddProductForm
+from .filter import Filter
 from ..bases.bases_admin_page import BaseAdminPage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -11,6 +12,9 @@ class ProductsPage(BaseAdminPage):
     def add_product(self) -> AddProductForm:
         self.find_element(self.ADD_BUTTON_LOCATOR).click()
         return AddProductForm(self._browser, (By.TAG_NAME, "form"))
+
+    def filter_products(self, product_name: str):
+        Filter(self._browser).filter(product_name)
 
     def save(self):
         self.find_element(self.SAVE_BUTTON_LOCATOR).click()

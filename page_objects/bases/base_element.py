@@ -1,4 +1,5 @@
 from .CONSTS import LOCATOR_TYPE
+from abc import ABCMeta, abstractmethod
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -66,3 +67,13 @@ class BaseElement:
         """
         wait = WebDriverWait(self._browser, timeout)
         wait.until(_ElementHasLocator(self._self, locator))
+
+
+class BaseDefineElement(BaseElement, metaclass=ABCMeta):
+    @property
+    @abstractmethod
+    def locator(self) -> LOCATOR_TYPE:
+        pass
+
+    def __init__(self, browser: WebDriver, parent: Optional[WebElement] = None):
+        super(BaseDefineElement, self).__init__(browser, self.locator, parent)

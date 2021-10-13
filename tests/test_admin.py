@@ -27,6 +27,10 @@ def add_new_good(current_browser: WebDriver, products_page: ProductsPage, new_pr
     AlertSuccess(current_browser).close()
 
 
+def delete_good(browser: WebDriver, products_page: ProductsPage, product: Product):
+    products_page.filter_products(product.name)
+
+
 def test_add_delete_new_good(browser, admin):
     new_product = Product(
         name=f"New_product_{curtime()}",
