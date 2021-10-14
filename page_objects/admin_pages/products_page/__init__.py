@@ -3,7 +3,6 @@ from .filter import Filter
 from .products_table import Product
 from .products_table import ProductsTable
 from ..bases.bases_admin_page import BaseAdminPage
-from page_objects.bases.CONSTS import LOCATOR_TYPE
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from typing import List

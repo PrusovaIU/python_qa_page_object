@@ -9,10 +9,8 @@ from page_objects.admin_pages.products_page import open_products_page
 from page_objects.elements.alert_success import AlertSuccess
 from page_objects.elements.browser_alert import BrowserAlert
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 from typing import List
-from time import sleep, time as curtime
+from time import time as curtime
 
 
 class NewProduct:
