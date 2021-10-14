@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 
 class Filter(BaseDefineElement):
     PRODUCT_NAME_INPUT_LOCATOR = (By.ID, "input-name")
-    FIND_BUTTON_LOCATOR = (By.ID, "#button-filter")
+    FIND_BUTTON_LOCATOR = (By.ID, "button-filter")
 
     @property
     def locator(self) -> LOCATOR_TYPE:

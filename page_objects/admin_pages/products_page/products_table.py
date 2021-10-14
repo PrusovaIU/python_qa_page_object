@@ -42,7 +42,7 @@ class ProductsTable(BaseDefineElement):
 
     @property
     def locator(self) -> LOCATOR_TYPE:
-        return By.CSS_SELECTOR, "#form-product > table"
+        return By.CSS_SELECTOR, "#form-product > div > table"
 
     def products(self):
         items: List[WebElement] = self._self.find_elements(*self.ITEM_LOCATOR)
