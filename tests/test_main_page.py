@@ -1,4 +1,5 @@
 from page_objects.user_pages.main_page import MainPage, MainPageElements
+from page_objects.user_pages.elements.header.top_panel import CURRENCY
 from time import sleep
 from typing import Tuple
 import pytest
@@ -28,3 +29,8 @@ def test_button(browser):
     required_text = "Your shopping cart is empty!"
     assert cart_ul.web_element.text == required_text, f"Unexpected text: {cart_ul.web_element.text}. " \
                                                       f"\"{required_text}\" is expected"
+
+
+def test_change_currency(browser):
+    main_page = MainPage(browser, browser.current_url)
+    main_page.top_panel.change_currency(CURRENCY.GBP)
