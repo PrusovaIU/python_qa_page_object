@@ -18,4 +18,3 @@ class GeneralTab(BaseTab):
         self._fill_input(self.META_TAG_DESCRIPTION_LOCATOR, meta_tag_description)
         self._fill_input(self.META_TAG_KEYWORDS_LOCATOR, meta_tag_key_words)
         self._fill_input(self.PRODUCT_TAGS_LOCATOR, product_tags)
-

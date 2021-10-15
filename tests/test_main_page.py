@@ -6,7 +6,6 @@ import pytest
 
 
 def test_content(browser):
-    sleep(1)
     MainPage(browser, browser.current_url).find_element(MainPageElements.CONTENT)
 
 

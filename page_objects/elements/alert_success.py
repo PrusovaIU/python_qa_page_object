@@ -16,4 +16,3 @@ class AlertSuccess:
 
     def close(self):
         self._self.find_element(*self.CLOSE_BUTTON_LOCATOR).click()
-        
