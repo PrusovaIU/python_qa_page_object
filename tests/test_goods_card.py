@@ -2,7 +2,6 @@ from page_objects.elements.alert_success import AlertSuccess
 from page_objects.user_pages.good_card import GoodCardPage
 from page_objects.user_pages.main_page import MainPage
 from selenium.webdriver.common.by import By
-from time import sleep
 
 
 def test_add_to_cart(browser):
@@ -15,4 +14,3 @@ def test_add_to_cart(browser):
     good_card_page.wait_browser_get_url(3)
     good_card_page.button_cart.click()
     AlertSuccess(browser)
-    sleep(1)

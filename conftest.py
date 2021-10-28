@@ -1,7 +1,17 @@
+from contextlib import suppress
+from datetime import datetime
+from os import mkdir
 from os.path import expanduser
 from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.support.events import AbstractEventListener, EventFiringWebDriver
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
+from sys import exc_info
 from typing import Tuple
+import logging
 import pytest
+import traceback
 
 
 BROWSER = "--browser"
@@ -10,6 +20,26 @@ DRIVERS = "--drivers"
 HEADLESS = "--headless"
 ADMIN_NAME = "--user"
 ADMIN_PASSWORD = "--password"
+
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(levelname)s: %(name)-12s: %(message)s",
+                    datefmt="%Y-%m-%d %H:%M:%S")
+logger = logging.getLogger("DriverListener")
+
+
+class DriverListener(AbstractEventListener):
+    def before_click(self, element: WebElement, driver: WebDriver):
+        logger.info(f"Element (Tag: {element.tag_name}) "
+                    f"will be clicked on page {driver.current_url}")
+
+    def on_exception(self, exception: Exception, driver: WebDriver):
+        with suppress(FileExistsError):
+            mkdir("logs")
+        exception_info = exc_info()
+        tb = str().join(traceback.format_tb(exception_info[2]))
+        driver.save_screenshot(f'logs/{type(exception).__name__}_{datetime.now()}.png')
+        logger.error(f"{tb}\tError: {type(exception).__name__}: {exception}")
+        raise exception
 
 
 def pytest_addoption(parser):
@@ -34,8 +64,12 @@ def browser(request):
         return options
 
     if browser == "chrome":
+        chrome_options: webdriver.ChromeOptions = add_options(webdriver.ChromeOptions)
+        chrome_options.add_experimental_option('w3c', False)
+        caps = DesiredCapabilities.CHROME
+        caps['loggingPrefs'] = {'performance': 'ALL', 'browser': 'ALL', 'driver': 'ALL'}
         driver = webdriver.Chrome(executable_path=drivers + "/chromedriver",
-                                  options=add_options(webdriver.ChromeOptions))
+                                  options=chrome_options, desired_capabilities=caps)
     elif browser == "firefox":
         driver = webdriver.Firefox(executable_path=drivers + "/geckodriver",
                                    options=add_options(webdriver.FirefoxOptions))
@@ -45,6 +79,14 @@ def browser(request):
         raise Exception("Unknown browser")
 
     driver.maximize_window()
+    driver = EventFiringWebDriver(driver, DriverListener())
+
+    # def close_browser():
+    #     if type(driver) is webdriver.Chrome:
+    #         print(1)
+    #     else:
+    #         print(2)
+    #     driver.close()
 
     request.addfinalizer(driver.close)
 

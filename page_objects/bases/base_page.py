@@ -1,4 +1,5 @@
 from .CONSTS import LOCATOR_TYPE
+from logging import getLogger
 from os.path import normpath
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
@@ -8,9 +9,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 class BasePage:
     def __init__(self, browser: WebDriver, url: str, get: bool = True):
+        self._logger = getLogger(self.__class__.__name__)
         self._url = url
         if get is True:
             browser.get(normpath(self._url))
+        self._logger.info(f"Url: {browser.current_url}")
         self._browser = browser
 
     def find_element(self, locator: LOCATOR_TYPE) -> WebElement:

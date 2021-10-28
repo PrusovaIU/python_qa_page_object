@@ -1,6 +1,5 @@
 from page_objects.user_pages.main_page import MainPage, MainPageElements
 from page_objects.user_pages.elements.header.top_panel import CURRENCY
-from time import sleep
 from typing import Tuple
 import pytest
 

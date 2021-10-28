@@ -1,5 +1,6 @@
 from .CONSTS import LOCATOR_TYPE
 from abc import ABCMeta, abstractmethod
+from logging import getLogger
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -23,6 +24,7 @@ class _ElementHasLocator:
 
 class BaseElement:
     def __init__(self, browser: WebDriver, locator: LOCATOR_TYPE, parent: Optional[WebElement] = None):
+        self._logger = getLogger(f"{type(self).__name__} ({locator[0]}: {locator[1]})")
         self._browser: WebDriver = browser
         self._parent: Optional[WebElement] = parent
         if parent is None:
@@ -35,6 +37,7 @@ class BaseElement:
 
     def click(self) -> None:
         self._self.click()
+        self._logger.info("Click")
 
     def find_element(self, locator: LOCATOR_TYPE) -> WebElement:
         """
@@ -57,6 +60,7 @@ class BaseElement:
         """
         wait = WebDriverWait(self._browser, timeout)
         wait.until(EC.visibility_of(self._self))
+        self._logger.info("Elements is visible")
 
     def wait_visibility_of_element(self, locator: LOCATOR_TYPE, timeout: float) -> None:
         """
@@ -67,6 +71,7 @@ class BaseElement:
         """
         wait = WebDriverWait(self._browser, timeout)
         wait.until(_ElementHasLocator(self._self, locator))
+        self._logger.info(f"{locator} is visible")
 
 
 class BaseDefineElement(BaseElement, metaclass=ABCMeta):
