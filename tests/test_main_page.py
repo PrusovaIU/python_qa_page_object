@@ -15,10 +15,16 @@ def test_content(browser):
                              pytest.param(MainPageElements.CAROUSEL_SWIPER, id="Test_carousel")
                          ])
 def test_find_elements(browser, locator: Tuple[str, str]):
+    """
+    Test find element
+    """
     MainPage(browser, browser.current_url).wait_visibility_of_element(locator, 3)
 
 
 def test_button(browser):
+    """
+    Test click on cart button of empty cart
+    """
     main_page = MainPage(browser, browser.current_url)
     cart_button = main_page.header.cart_button
     cart_button.click()
@@ -30,5 +36,6 @@ def test_button(browser):
 
 
 def test_change_currency(browser):
+    """Test change currency on top panel"""
     main_page = MainPage(browser, browser.current_url)
     main_page.top_panel.change_currency(CURRENCY.GBP)

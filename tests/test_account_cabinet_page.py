@@ -6,6 +6,9 @@ from time import time as curtime
 
 
 def test_add_new_user(browser):
+    """
+    Test adding new user
+    """
     BasePageWithHeader(browser, browser.current_url, False).top_panel.register_new_user()
     account_cabinet_page = AccountCabinetPage(browser, browser.current_url, False)
     user_id = curtime()

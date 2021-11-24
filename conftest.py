@@ -1,3 +1,4 @@
+from allure import attach, attachment_type
 from contextlib import suppress
 from datetime import datetime
 from os import mkdir
@@ -37,8 +38,13 @@ class DriverListener(AbstractEventListener):
             mkdir("logs")
         exception_info = exc_info()
         tb = str().join(traceback.format_tb(exception_info[2]))
-        driver.save_screenshot(f'logs/{type(exception).__name__}_{datetime.now()}.png')
+        screenshot_url = f'logs/{type(exception).__name__}_{datetime.now()}.png'
+        driver.save_screenshot(screenshot_url)
         logger.error(f"{tb}\tError: {type(exception).__name__}: {exception}")
+        attach.file(
+            source=screenshot_url,
+            attachment_type=attachment_type.PNG
+        )
         raise exception
 
 

@@ -1,3 +1,4 @@
+from allure import step
 from page_objects.admin_pages.bases.bases_admin_page import BaseAdminPage
 from page_objects.admin_pages.products_page.add_product_form import AddProductForm
 from page_objects.admin_pages.products_page.add_product_form.general_tab import GeneralTab
@@ -20,6 +21,7 @@ class NewProduct:
         self.model = model
 
 
+@step("Add new good")
 def add_new_good(current_browser: WebDriver, products_page: ProductsPage, new_product: NewProduct):
     new_product_form: AddProductForm = products_page.add_product()
     general_tab: GeneralTab = new_product_form.navtabs.general()
@@ -30,6 +32,7 @@ def add_new_good(current_browser: WebDriver, products_page: ProductsPage, new_pr
     AlertSuccess(current_browser).close()
 
 
+@step("Delete good")
 def delete_good(browser: WebDriver, products_page: ProductsPage, product: NewProduct):
     products_page.filter_products(product.name)
     products: List[Product] = products_page.get_products()
@@ -40,6 +43,9 @@ def delete_good(browser: WebDriver, products_page: ProductsPage, product: NewPro
 
 
 def test_add_delete_new_good(browser, admin):
+    """
+    Test add new good and delete it from admin panel
+    """
     new_product = NewProduct(
         name=f"New_product_{curtime()}",
         meta_tag_title="New meta tag",
