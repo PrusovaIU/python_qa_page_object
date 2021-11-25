@@ -1,4 +1,4 @@
-from allure import attach, attachment_type
+from allure import attach, attachment_type, step
 from contextlib import suppress
 from datetime import datetime
 from os import mkdir
@@ -21,6 +21,10 @@ DRIVERS = "--drivers"
 HEADLESS = "--headless"
 ADMIN_NAME = "--user"
 ADMIN_PASSWORD = "--password"
+EXECUTOR = "--executor"
+BVERSION = "--bversion"
+VIDEOS = "--videos"
+VNC = "--vnc"
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(levelname)s: %(name)-12s: %(message)s",
@@ -55,12 +59,14 @@ def pytest_addoption(parser):
     parser.addoption(HEADLESS, action="store_true")
     parser.addoption(ADMIN_NAME, action="store", default="user")
     parser.addoption(ADMIN_PASSWORD, action="store", default="bitnami")
+    parser.addoption(EXECUTOR, action="store", default="localhost")
+    parser.addoption(BVERSION, action="store", default="94.0")
+    parser.addoption(VIDEOS, action="store_true", default=False)
+    parser.addoption(VNC, action="store_true", default=False)
 
 
-@pytest.fixture
-def browser(request):
-    browser = request.config.getoption(BROWSER)
-    url = request.config.getoption(URL)
+@step("Init local browser")
+def __local_executor(request, browser):
     drivers = request.config.getoption(DRIVERS)
     headless = request.config.getoption(HEADLESS)
 
@@ -84,21 +90,54 @@ def browser(request):
     else:
         raise Exception("Unknown browser")
 
-    driver.maximize_window()
-    driver = EventFiringWebDriver(driver, DriverListener())
+    return driver
 
-    # def close_browser():
-    #     if type(driver) is webdriver.Chrome:
-    #         print(1)
-    #     else:
-    #         print(2)
-    #     driver.close()
 
-    request.addfinalizer(driver.close)
+@step("Init selenoid session")
+def __selenoid_executor(request, executor, browser):
+    bversion = request.config.getoption(BVERSION)
+    vnc = request.config.getoption(VNC)
+    videos = request.config.getoption(VIDEOS)
+
+    executor_url = f"http://{executor}:4444/wd/hub"
+
+    caps = {
+        "browserName": browser,
+        "browserVersion": bversion,
+        "screenResolution": "1280x1024",
+        "name": "Opencart tests",
+        "selenoid:options": {
+            "sessionTimeout": "60s",
+            "enableVNC": vnc,
+            "enableVideo": videos
+        }
+    }
+
+    driver = webdriver.Remote(
+        command_executor=executor_url,
+        desired_capabilities=caps
+    )
+
+    return driver
+
+
+@pytest.fixture
+def browser(request):
+    browser = request.config.getoption(BROWSER)
+    url = request.config.getoption(URL)
+    executor = request.config.getoption(EXECUTOR)
+
+    if executor == "local":
+        driver = __local_executor(request, browser)
+    else:
+        driver = __selenoid_executor(request, executor, browser)
 
     driver.get(url)
     driver.url = url
+    driver.maximize_window()
+    driver = EventFiringWebDriver(driver, DriverListener())
 
+    request.addfinalizer(driver.close)
     return driver
 
 
