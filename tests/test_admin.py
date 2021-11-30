@@ -1,4 +1,5 @@
-from allure import step
+from .attach_sreenshot import attach_screenshot
+from allure import step, title
 from page_objects.admin_pages.bases.bases_admin_page import BaseAdminPage
 from page_objects.admin_pages.products_page.add_product_form import AddProductForm
 from page_objects.admin_pages.products_page.add_product_form.general_tab import GeneralTab
@@ -42,19 +43,24 @@ def delete_good(browser: WebDriver, products_page: ProductsPage, product: NewPro
     AlertSuccess(browser).close()
 
 
+@title("Test add/delete new good")
 def test_add_delete_new_good(browser, admin):
     """
     Test add new good and delete it from admin panel
     """
-    new_product = NewProduct(
-        name=f"New_product_{curtime()}",
-        meta_tag_title="New meta tag",
-        model="New model"
-    )
-    AdminLoginPage(browser, f"{browser.current_url}/admin").login(admin[0], admin[1])
-    products_page = open_products_page(
-        browser,
-        BaseAdminPage(browser, browser.current_url, False)
-    )
-    add_new_good(browser, products_page, new_product)
-    delete_good(browser, products_page, new_product)
+    try:
+        new_product = NewProduct(
+            name=f"New_product_{curtime()}",
+            meta_tag_title="New meta tag",
+            model="New model"
+        )
+        AdminLoginPage(browser, f"{browser.current_url}/admin").login(admin[0], admin[1])
+        products_page = open_products_page(
+            browser,
+            BaseAdminPage(browser, browser.current_url, False)
+        )
+        add_new_good(browser, products_page, new_product)
+        delete_good(browser, products_page, new_product)
+    except Exception as err:
+        attach_screenshot(browser, err)
+        raise err

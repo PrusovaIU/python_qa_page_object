@@ -1,4 +1,5 @@
-from allure import step
+from .attach_sreenshot import attach_screenshot
+from allure import step, title
 from page_objects.elements.alert_success import AlertSuccess
 from page_objects.user_pages.good_card import GoodCardPage
 from page_objects.user_pages.main_page import MainPage
@@ -13,12 +14,17 @@ def good_click(good) -> str:
     return good_url
 
 
+@title("Test add new good to cart")
 def test_add_to_cart(browser):
     """Test add good to cart"""
-    goods_row = MainPage(browser, browser.current_url).goods_row
-    good = goods_row.goods[0]
-    good_url = good_click(good)
-    good_card_page = GoodCardPage(browser, good_url, False)
-    good_card_page.wait_browser_get_url(3)
-    good_card_page.button_cart.click()
-    AlertSuccess(browser)
+    try:
+        goods_row = MainPage(browser, browser.current_url).goods_row
+        good = goods_row.goods[0]
+        good_url = good_click(good)
+        good_card_page = GoodCardPage(browser, good_url, False)
+        good_card_page.wait_browser_get_url(3)
+        good_card_page.button_cart.click()
+        AlertSuccess(browser)
+    except Exception as err:
+        attach_screenshot(browser, err)
+        raise err

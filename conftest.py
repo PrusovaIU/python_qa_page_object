@@ -1,18 +1,13 @@
-from allure import attach, attachment_type, step
-from contextlib import suppress
-from datetime import datetime
-from os import mkdir
+from allure import step
 from os.path import expanduser
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.events import AbstractEventListener, EventFiringWebDriver
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from sys import exc_info
 from typing import Tuple
 import logging
 import pytest
-import traceback
 
 
 BROWSER = "--browser"
@@ -36,20 +31,6 @@ class DriverListener(AbstractEventListener):
     def before_click(self, element: WebElement, driver: WebDriver):
         logger.info(f"Element (Tag: {element.tag_name}) "
                     f"will be clicked on page {driver.current_url}")
-
-    def on_exception(self, exception: Exception, driver: WebDriver):
-        with suppress(FileExistsError):
-            mkdir("logs")
-        exception_info = exc_info()
-        tb = str().join(traceback.format_tb(exception_info[2]))
-        screenshot_url = f'logs/{type(exception).__name__}_{datetime.now()}.png'
-        driver.save_screenshot(screenshot_url)
-        logger.error(f"{tb}\tError: {type(exception).__name__}: {exception}")
-        attach.file(
-            source=screenshot_url,
-            attachment_type=attachment_type.PNG
-        )
-        raise exception
 
 
 def pytest_addoption(parser):
