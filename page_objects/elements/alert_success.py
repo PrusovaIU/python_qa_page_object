@@ -1,3 +1,4 @@
+from logging import getLogger
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
@@ -9,10 +10,12 @@ class AlertSuccess:
     CLOSE_BUTTON_LOCATOR = (By.TAG_NAME, "button")
     
     def __init__(self, browser: WebDriver):
+        self.__logger = getLogger(self.__class__.__name__)
         self.__browser: WebDriver = browser
-        wait = WebDriverWait(browser, 2)
+        wait = WebDriverWait(browser, 5)
         wait.until(EC.visibility_of_element_located(self.LOCATOR))
         self._self = browser.find_element(*self.LOCATOR)
 
     def close(self):
         self._self.find_element(*self.CLOSE_BUTTON_LOCATOR).click()
+        self.__logger.info("Close")

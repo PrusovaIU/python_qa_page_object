@@ -33,12 +33,18 @@ class RegisterAccountForm(BaseDefineElement):
         self.__fill_input(self.PASSWORD_INPUT_LOCATOR, password)
         self.__fill_input(self.PASSWORD_CONFIRM_INPUT_LOCATOR, password)
         subscribe_els: List[WebElement] = self._self.find_elements(*self.SUBSCRIBE_LOCATOR)
-        for el in subscribe_els:
-            a = el.get_attribute("value")
         radio = [el for el in subscribe_els if el.get_attribute("value") == str(int(subscribe))]
         radio[0].click()
         self.find_element(self.PRIVACY_POLICY_CHECKBOX_LOCATOR).click()
+        self._logger.info(f"Fill data:"
+                          f"\n\tFirst name: {first_name}"
+                          f"\n\tLast name: {last_name}"
+                          f"\n\tEmail: {email}"
+                          f"\n\tTelephone: {telephone}"
+                          f"\n\tPassword: {password}"
+                          f"\n\tSubscribe: {subscribe}")
         return self
 
     def apply(self):
         self.find_element(self.CONTINUE_BUTTON_LOCATOR).click()
+        self._logger.info("Button \"Continue\" has been clicked")
