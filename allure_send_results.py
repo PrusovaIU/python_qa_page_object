@@ -2,6 +2,7 @@ import os
 import requests
 import json
 import base64
+import http
 
 # This directory is where you have all your results locally, generally named as `allure-results`
 allure_results_directory = '/allure-results'
@@ -9,8 +10,8 @@ allure_results_directory = '/allure-results'
 allure_server = 'http://localhost:5050'
 # Project ID according to existent projects in your Allure container -
 # Check endpoint for project creation >> `[POST]/projects`
-project_id = 'default'
-# project_id = 'my-project-id'
+# project_id = 'default'
+project_id = 'opencart-tests'
 
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
@@ -37,8 +38,8 @@ for file in files:
                     result['content_base64'] = b64_content.decode('UTF-8')
                     results.append(result)
                 else:
-                    print('Empty File skipped: '+ file_path)
-        finally :
+                    print('Empty File skipped: ' + file_path)
+        finally:
             f.close()
     else:
         print('Directory skipped: '+ file_path)
@@ -50,6 +51,27 @@ request_body = {
 json_request_body = json.dumps(request_body)
 
 ssl_verification = True
+
+print("-----------------CHECK-PROJECT------------------")
+response = requests.get(allure_server + '/allure-docker-service/projects/' + project_id,
+                        headers=headers, verify=ssl_verification)
+print("STATUS CODE:")
+print(response.status_code)
+print("RESPONSE:")
+json_response_body = json.loads(response.content)
+json_prettier_response_body = json.dumps(json_response_body, indent=4, sort_keys=True)
+print(json_prettier_response_body)
+if response.status_code == http.HTTPStatus.NOT_FOUND:
+    create_project_data = json.dumps({"id": project_id})
+    response = requests.post(allure_server + '/allure-docker-service/projects',
+                             headers=headers, data=create_project_data, verify=ssl_verification)
+    print("STATUS CODE:")
+    print(response.status_code)
+    print("RESPONSE:")
+    json_response_body = json.loads(response.content)
+    json_prettier_response_body = json.dumps(json_response_body, indent=4, sort_keys=True)
+    print(json_prettier_response_body)
+
 
 print("------------------SEND-RESULTS------------------")
 response = requests.post(allure_server + '/allure-docker-service/send-results?project_id=' + project_id,
@@ -68,9 +90,9 @@ print("------------------GENERATE-REPORT------------------")
 execution_name = 'execution from my script'
 execution_from = 'http://google.com'
 execution_type = 'teamcity'
-response = requests.get(allure_server + '/allure-docker-service/generate-report?project_id=' + project_id + 
-'&execution_name=' + execution_name + '&execution_from=' + execution_from + '&execution_type=' + execution_type, 
-headers=headers, verify=ssl_verification)
+response = requests.get(allure_server + '/allure-docker-service/generate-report?project_id=' + project_id +
+                        '&execution_name=' + execution_name + '&execution_from=' + execution_from + '&execution_type='
+                        + execution_type, headers=headers, verify=ssl_verification)
 print("STATUS CODE:")
 print(response.status_code)
 print("RESPONSE:")
