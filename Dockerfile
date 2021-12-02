@@ -4,4 +4,4 @@ COPY . /tests_project
 WORKDIR /tests_project
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-ENTRYPOINT ["pytest", "tests"]
+ENTRYPOINT ["./docker_run.sh"]
